@@ -15,10 +15,4 @@ public class User {
   String password;
   RoleEnum role;
 
-  public void xddd() {
-    var x = this.getId();
-    System.out.println("xddd: " + x);
-
-  }
-
 }
