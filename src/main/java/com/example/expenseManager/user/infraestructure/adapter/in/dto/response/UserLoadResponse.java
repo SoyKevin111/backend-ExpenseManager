@@ -1,4 +1,4 @@
-package com.example.expenseManager.user.application.dto.response;
+package com.example.expenseManager.user.infraestructure.adapter.in.dto.response;
 
 import com.example.expenseManager.user.domain.RoleEnum;
 import lombok.*;

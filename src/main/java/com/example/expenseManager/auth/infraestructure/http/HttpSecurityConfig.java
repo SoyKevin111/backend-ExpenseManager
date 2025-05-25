@@ -3,6 +3,7 @@ package com.example.expenseManager.auth.infraestructure.http;
 import com.example.expenseManager.auth.application.service.UserAuthService;
 import com.example.expenseManager.auth.application.util.JwtUtils;
 import com.example.expenseManager.auth.infraestructure.filter.JwtAuthenticationFilter;
+import com.example.expenseManager.core.domain.constants.CommonPaths;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,19 +75,16 @@ public class HttpSecurityConfig {
 
    @Bean
    @Order(2)
-   public SecurityFilterChain usersSecurity(HttpSecurity http) throws Exception {
+   public SecurityFilterChain adminsSecurity(HttpSecurity http) throws Exception {
       applyCommonConfig(http);
       return http
-         .securityMatcher("/manager/request/users/**") // endpoints que comiencen con manager/request/users/
+         .securityMatcher(CommonPaths.PATH_USERS_ADMIN + "/**") // endpoints que comiencen con manager/request/users/
          .authorizeHttpRequests(auth -> {
-            //USER
-            auth.requestMatchers(HttpMethod.GET, "/manager/request/users/*").hasAnyRole("USER", "ADMIN"); //get user by id
-            auth.requestMatchers(HttpMethod.PUT, "/manager/request/users/profile/*").hasAnyRole("USER", "ADMIN"); //actualizar perfil
-            //ADMIN
-            auth.requestMatchers(HttpMethod.GET, "/manager/request/users").hasRole("ADMIN");
-            auth.requestMatchers(HttpMethod.POST, "/manager/request/users").hasRole("ADMIN");
-            auth.requestMatchers(HttpMethod.PUT, "/manager/request/users").hasRole("ADMIN");
-            auth.requestMatchers(HttpMethod.DELETE, "/manager/request/users").hasRole("ADMIN");
+            auth.requestMatchers(HttpMethod.GET, CommonPaths.PATH_USERS_ADMIN+ "/users").hasRole("ADMIN");
+            auth.requestMatchers(HttpMethod.GET, CommonPaths.PATH_USERS_ADMIN + "/users/*").hasRole("ADMIN");
+            auth.requestMatchers(HttpMethod.POST, CommonPaths.PATH_USERS_ADMIN + "/users").hasRole("ADMIN");
+            auth.requestMatchers(HttpMethod.PUT, CommonPaths.PATH_USERS_ADMIN + "/users/*").hasRole("ADMIN");
+            auth.requestMatchers(HttpMethod.DELETE, CommonPaths.PATH_USERS_ADMIN + "/users/*").hasRole("ADMIN");
             auth.anyRequest().denyAll();//denegamos el acceso a cualquier otro endpoint
          })
          .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
@@ -95,15 +93,30 @@ public class HttpSecurityConfig {
 
    @Bean
    @Order(3)
+   public SecurityFilterChain usersSecurity(HttpSecurity http) throws Exception {
+      applyCommonConfig(http);
+      return http
+         .securityMatcher(CommonPaths.PATH_USERS + "/**") // endpoints que comiencen con manager/request/users/
+         .authorizeHttpRequests(auth -> {
+            //Profile
+            auth.requestMatchers(HttpMethod.GET, CommonPaths.PATH_USERS + "/profile/load").hasAnyRole("USER", "ADMIN"); //cargar perfil
+            auth.requestMatchers(HttpMethod.PATCH, CommonPaths.PATH_USERS + "/profile/*").hasAnyRole("USER", "ADMIN"); //actualizar perfil
+         })
+         .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
+         .build();
+   }
+
+   @Bean
+   @Order(4)
    public SecurityFilterChain transactionsSecurity(HttpSecurity http) throws Exception {
       applyCommonConfig(http);
       return http
-         .securityMatcher("/manager/request/transactions/**")
+         .securityMatcher(CommonPaths.PATH_TRANSACTIONS + "/**")
          .authorizeHttpRequests(auth -> {
-               auth.requestMatchers(HttpMethod.POST, "/manager/request/transactions").hasAnyRole("ADMIN", "USER");
-               auth.requestMatchers(HttpMethod.GET, "/manager/request/transactions/balance-and-savings").hasAnyRole("ADMIN", "USER");
-               auth.requestMatchers(HttpMethod.GET, "/manager/request/transactions/finance-status-monthly").hasAnyRole("ADMIN", "USER");
-               auth.requestMatchers(HttpMethod.POST, "/manager/request/transactions/page").hasAnyRole("ADMIN", "USER");
+               auth.requestMatchers(HttpMethod.POST, CommonPaths.PATH_TRANSACTIONS).hasAnyRole("ADMIN", "USER");
+               auth.requestMatchers(HttpMethod.GET, CommonPaths.PATH_TRANSACTIONS + "/balance-and-savings").hasAnyRole("ADMIN", "USER");
+               auth.requestMatchers(HttpMethod.GET, CommonPaths.PATH_TRANSACTIONS + "/finance-status-monthly").hasAnyRole("ADMIN", "USER");
+               auth.requestMatchers(HttpMethod.POST, CommonPaths.PATH_TRANSACTIONS + "/page").hasAnyRole("ADMIN", "USER");
                auth.anyRequest().denyAll();
             }
          )

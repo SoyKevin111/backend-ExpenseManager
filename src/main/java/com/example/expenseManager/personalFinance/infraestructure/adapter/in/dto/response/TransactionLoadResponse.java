@@ -1,4 +1,4 @@
-package com.example.expenseManager.personalFinance.application.dto.response;
+package com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.response;
 
 import com.example.expenseManager.personalFinance.domain.models.Category;
 import com.example.expenseManager.personalFinance.domain.models.TypeTransaction;

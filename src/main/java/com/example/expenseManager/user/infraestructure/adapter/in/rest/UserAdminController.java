@@ -1,18 +1,17 @@
-package com.example.expenseManager.user.infraestructure.adapter.in;
+package com.example.expenseManager.user.infraestructure.adapter.in.rest;
+
 
 import com.example.expenseManager.core.application.mappers.RequestGeneralMapper;
 import com.example.expenseManager.user.application.UpdateProfileMapping;
 import com.example.expenseManager.user.application.UpdateUserMapping;
-import com.example.expenseManager.user.application.dto.request.CreateUserRequest;
-import com.example.expenseManager.user.application.dto.request.UpdateProfileRequest;
-import com.example.expenseManager.user.application.dto.request.UpdateUserRequest;
-import com.example.expenseManager.user.application.dto.response.UserLoadResponse;
 import com.example.expenseManager.user.domain.User;
 import com.example.expenseManager.user.domain.port.in.IUserUseCase;
+import com.example.expenseManager.user.infraestructure.adapter.in.dto.request.CreateUserRequest;
+import com.example.expenseManager.user.infraestructure.adapter.in.dto.request.UpdateUserRequest;
+import com.example.expenseManager.user.infraestructure.adapter.in.dto.response.UserLoadResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/manager/request")
-public class UserController {
+@RequestMapping("/manager/request/admin")
+public class UserAdminController {
 
    @Autowired
    IUserUseCase userUseCase;
@@ -32,7 +31,8 @@ public class UserController {
    @Autowired
    private UpdateProfileMapping updateProfileMapping;
 
-   @PostMapping("/users")
+
+   @PostMapping("/users") //rol: admin
    public ResponseEntity<?> create(@RequestBody @Valid CreateUserRequest createUserRequest) {
       User userResponse = this.requestMapper.toDomain(createUserRequest, User.class); //valida y mapea datos.
       User user = this.userUseCase.save(userResponse);
@@ -44,7 +44,7 @@ public class UserController {
          .build());
    }
 
-   @PutMapping("/users/{id}") //rol: admin
+   @PutMapping("users/{id}") //rol: admin
    public ResponseEntity<?> update(@RequestBody UpdateUserRequest updateUserRequest, @PathVariable Long id) {
       User userResponse = this.updateUserMapping.toDomainModel(updateUserRequest, id);
       User user = this.userUseCase.save(userResponse); //with id
@@ -56,14 +56,14 @@ public class UserController {
          .build());
    }
 
-   @DeleteMapping("/users/{id}") //rol: admin
+   @DeleteMapping("users/{id}") //rol: admin
    public ResponseEntity<?> delete(@PathVariable Long id) {
       this.userUseCase.delete(id);
       return ResponseEntity.ok().build();
    }
 
-   @GetMapping("/users/{id}") //rol: admin
-   public ResponseEntity<?> findById(@PathVariable Long id) {
+   @GetMapping("users/{id}") //rol: admin
+   public ResponseEntity<?> findById(@PathVariable Long id) { // encontrar por id
       Optional<User> userOptional = this.userUseCase.findById(id);
       if (userOptional.isPresent()) {
          User user = userOptional.get();
@@ -77,21 +77,8 @@ public class UserController {
       return ResponseEntity.notFound().build();
    }
 
-   @GetMapping("users/load") //ADMIN, USER
-   public ResponseEntity<?> findByEmail(Authentication auth) {
-      User user = this.userUseCase.findByEmail(auth.getName());
-      return ResponseEntity.ok().body(
-         UserLoadResponse.builder()
-            .id(user.getId())
-            .username(user.getUsername())
-            .email(user.getEmail())
-            .role(user.getRole())
-            .build()
-      );
-   }
-
    @GetMapping("/users") //rol: admin
-   public ResponseEntity<?> findAll() {
+   public ResponseEntity<?> findAll() { //todos
       List<UserLoadResponse> userLoadResponses = new ArrayList<>();
       this.userUseCase.findAll().forEach(
          user -> userLoadResponses.add(
@@ -106,17 +93,4 @@ public class UserController {
       return ResponseEntity.ok().body(userLoadResponses);
    }
 
-   @PatchMapping("/users/profile/{id}") //rol: user, admin
-   public ResponseEntity<?> update(@RequestBody @Valid UpdateProfileRequest updateProfileRequest, @PathVariable Long id) {
-      User userResponse = this.updateProfileMapping.toDomainModel(updateProfileRequest, id);
-      User user = this.userUseCase.updateProfile(userResponse);
-      return ResponseEntity.ok().body(
-         UserLoadResponse.builder()
-            .id(user.getId())
-            .username(user.getUsername())
-            .email(user.getEmail())
-            .role(user.getRole())
-            .build()
-      );
-   }
 }

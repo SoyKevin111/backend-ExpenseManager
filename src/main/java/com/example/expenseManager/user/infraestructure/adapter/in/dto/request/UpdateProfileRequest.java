@@ -1,4 +1,4 @@
-package com.example.expenseManager.user.application.dto.request;
+package com.example.expenseManager.user.infraestructure.adapter.in.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

@@ -1,9 +1,9 @@
 package com.example.expenseManager.personalFinance.infraestructure.adapter.in.rest;
 
-import com.example.expenseManager.personalFinance.application.dto.request.CreateTransactionRequest;
-import com.example.expenseManager.personalFinance.application.dto.request.TransactionPage;
-import com.example.expenseManager.personalFinance.application.dto.response.FinancialStatusResponse;
-import com.example.expenseManager.personalFinance.application.dto.response.TransactionLoadResponse;
+import com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.request.CreateTransactionRequest;
+import com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.request.TransactionPage;
+import com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.response.FinancialStatusResponse;
+import com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.response.TransactionLoadResponse;
 import com.example.expenseManager.personalFinance.application.mapping.CreateTransactionMapping;
 import com.example.expenseManager.personalFinance.domain.models.Transaction;
 import com.example.expenseManager.personalFinance.domain.models.TypeTransaction;

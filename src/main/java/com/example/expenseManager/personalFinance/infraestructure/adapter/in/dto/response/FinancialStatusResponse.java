@@ -1,4 +1,4 @@
-package com.example.expenseManager.personalFinance.application.dto.response;
+package com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.response;
 
 import lombok.*;
 

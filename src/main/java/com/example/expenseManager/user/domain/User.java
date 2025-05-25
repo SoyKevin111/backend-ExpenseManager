@@ -9,9 +9,16 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class User {
-   Long id;
-   String username;
-   String email;
-   String password;
-   RoleEnum role;
+  Long id;
+  String username;
+  String email;
+  String password;
+  RoleEnum role;
+
+  public void xddd() {
+    var x = this.getId();
+    System.out.println("xddd: " + x);
+
+  }
+
 }

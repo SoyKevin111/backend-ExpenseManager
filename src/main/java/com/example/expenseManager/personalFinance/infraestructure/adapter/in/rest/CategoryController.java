@@ -1,7 +1,7 @@
 package com.example.expenseManager.personalFinance.infraestructure.adapter.in.rest;
 
 import com.example.expenseManager.core.application.validations.IdExistenceValidator;
-import com.example.expenseManager.personalFinance.application.dto.request.CreateCategoryRequest;
+import com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.request.CreateCategoryRequest;
 import com.example.expenseManager.core.application.mappers.RequestGeneralMapper;
 import com.example.expenseManager.personalFinance.domain.models.Category;
 import com.example.expenseManager.personalFinance.domain.port.in.usecases.ICategoryUseCase;

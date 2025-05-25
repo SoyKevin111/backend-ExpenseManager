@@ -1,4 +1,4 @@
-package com.example.expenseManager.personalFinance.application.dto.request;
+package com.example.expenseManager.personalFinance.infraestructure.adapter.in.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
